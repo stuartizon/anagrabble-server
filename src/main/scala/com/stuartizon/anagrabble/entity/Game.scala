@@ -1,6 +1,6 @@
 package com.stuartizon.anagrabble.entity
 
-case class Game(players: List[Player], words: List[Word], letters: List[Char])
+case class Game(players: List[Player] = Nil, words: List[Word] = Nil, letters: List[Char] = Nil)
 
 case class Player(id: Long, name: String)
 
