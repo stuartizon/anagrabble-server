@@ -6,5 +6,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % "0.12.3",
   "io.circe" %% "circe-generic" % "0.12.3",
   "io.circe" %% "circe-parser" % "0.12.3",
+  "org.specs2" %% "specs2-core" % "4.10.0" % Test,
+  "org.specs2" %% "specs2-mock" % "4.10.0" % Test,
   "ch.qos.logback" % "logback-classic" % "1.1.3" % Runtime
 )
