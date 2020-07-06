@@ -8,7 +8,7 @@ class WordBuildingService {
     * Returns a [[scala.Some]] containing the new game state if the word can be built, or a [[scala.None]] if it is not
     * possible to build this word from the current game state. */
   def buildWord(game: Game, newWord: Word): Option[Game] = {
-    def extraLettersRequiredForNewWord(from: Word) = newWord.value.diff(from.value).toList
+    def lettersRequiredToBuildNewWord(from: Word) = newWord.value.diff(from.value).toList
 
     def allLettersUsedInNewWord(from: Word) = from.value.diff(newWord.value).isEmpty
 
@@ -16,17 +16,17 @@ class WordBuildingService {
 
 
     game.words.filter(allLettersUsedInNewWord)
-      .map(word => word -> extraLettersRequiredForNewWord(word))
+      .map(word => word -> lettersRequiredToBuildNewWord(word))
       .find {
-        case (_, extraLetters) => extraLetters.nonEmpty && letterPileContains(extraLetters)
+        case (_, lettersRequired) => lettersRequired.nonEmpty && letterPileContains(lettersRequired)
       }
       .map {
-        case (word, extraLetters) => Game(game.players, newWord :: game.words.filterNot(_ == word), game.letters.diff(extraLetters))
+        case (word, lettersRequired) => game.removeWord(word).removeLetters(lettersRequired).addWord(newWord)
       }
       .orElse {
-        val letters = newWord.value.toList
-        if (letterPileContains(letters))
-          Some(Game(game.players, newWord :: game.words, game.letters.diff(letters)))
+        val lettersRequired = newWord.value.toList
+        if (letterPileContains(lettersRequired))
+          Some(game.removeLetters(lettersRequired).addWord(newWord))
         else None
       }
   }

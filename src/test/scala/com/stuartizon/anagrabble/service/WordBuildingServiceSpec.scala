@@ -1,11 +1,11 @@
 package com.stuartizon.anagrabble.service
 
-import com.stuartizon.anagrabble.entity.{Game, Word}
+import com.stuartizon.anagrabble.entity.{Game, LetterBag, Word}
 import org.specs2.mutable.Specification
 
 class WordBuildingServiceSpec extends Specification {
   val cat = Word("cat", 1)
-  val initialGameState = Game(Nil, List(cat), List('s', 'k', 'y', 'p'))
+  val initialGameState = Game(Nil, List(cat), List('s', 'k', 'y', 'p'), LetterBag(Nil))
   val wordBuildingService = new WordBuildingService
 
   "Word building service" should {
