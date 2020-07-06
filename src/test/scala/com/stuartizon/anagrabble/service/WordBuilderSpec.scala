@@ -5,7 +5,7 @@ import org.specs2.mutable.Specification
 
 class WordBuilderSpec extends Specification with WordBuilder {
   val cat = Word("cat", 1)
-  val initialGameState = Game(Nil, List(cat), List('s', 'k', 'y', 'p'), LetterBag(Nil))
+  val initialGameState = Game(Nil, List(cat), List('s', 'k', 'y', 'p'), LetterBag())
 
   "Word builder" should {
     "build a word by stealing an existing word" in {
