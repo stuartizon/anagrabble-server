@@ -2,7 +2,7 @@ package com.stuartizon.anagrabble.service
 
 import com.stuartizon.anagrabble.entity.{Game, Word}
 
-class WordBuildingService {
+trait WordBuilder {
   /** Attempt to build the given word from existing words and upturned letters.
     *
     * Returns a [[scala.Some]] containing the new game state if the word can be built, or a [[scala.None]] if it is not

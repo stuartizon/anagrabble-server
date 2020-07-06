@@ -11,31 +11,27 @@ import org.specs2.specification.Scope
 
 class GameManagerSpec extends Specification with Mockito {
   implicit val system: ActorSystem = ActorSystem()
-  val cat = Word("cat", 123)
-  val initialGameState = Game(Nil, Nil, Nil, LetterBag(Nil))
+  val initialGameState = Game(Nil, Nil, List('c', 'a', 't'), LetterBag(Nil))
 
   class GameManagerSpecContext extends Scope {
     val gameStateListener = TestProbe()
-    val wordBuildingService: WordBuildingService = mock[WordBuildingService]
     val config: AnagrabbleConfig = mock[AnagrabbleConfig]
-    val gameManager: ActorRef = system.actorOf(Props(classOf[GameManager], initialGameState, wordBuildingService, gameStateListener.ref))
+    val gameManager: ActorRef = system.actorOf(Props(classOf[GameManager], initialGameState, gameStateListener.ref))
   }
-
 
   "Game manager" should {
     "send an updated game state when a new word is built" in new GameManagerSpecContext {
-      val newGameState = Game(Nil, List(cat), Nil, LetterBag(Nil))
-      wordBuildingService.buildWord(initialGameState, cat) returns Some(newGameState)
+      val cat = Word("cat", 123)
 
       gameManager ! GuessWord(cat)
-      gameStateListener.expectMsg(newGameState)
+      gameStateListener.expectMsg(Game(Nil, List(cat), Nil, LetterBag(Nil)))
       ok
     }
 
     "not send an update when a new word is not possible" in new GameManagerSpecContext {
-      wordBuildingService.buildWord(initialGameState, cat) returns None
+      val dog = Word("dog", 123)
 
-      gameManager ! GuessWord(cat)
+      gameManager ! GuessWord(dog)
       gameStateListener.expectNoMessage
       ok
     }
