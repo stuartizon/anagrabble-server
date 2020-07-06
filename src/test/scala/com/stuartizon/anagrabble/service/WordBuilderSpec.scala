@@ -7,7 +7,7 @@ class WordBuilderSpec extends Specification with WordBuilder {
   val cat = Word("cat", 1)
   val initialGameState = Game(Nil, List(cat), List('s', 'k', 'y', 'p'), LetterBag(Nil))
 
-  "Word building service" should {
+  "Word builder" should {
     "build a word by stealing an existing word" in {
       val cast = Word("cast", 23)
       val result = buildWord(initialGameState, cast)
