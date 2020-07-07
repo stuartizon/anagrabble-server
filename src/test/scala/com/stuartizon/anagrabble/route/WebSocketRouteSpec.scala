@@ -11,13 +11,13 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 
 class WebSocketRouteSpec extends Specification with Mockito with Specs2RouteTest {
-  def state1 = Game(Nil, Nil, List('H'), LetterBag())
+  def state1 = Game(Nil, Nil, List('h'), LetterBag())
 
   def state2(word: Word) = Game(Nil, List(word), Nil, LetterBag())
 
   val gameFlow: Flow[PlayerCommand, Game, NotUsed] = Flow.fromFunction {
     case TurnLetter => state1
-    case GuessWord(word) => state2(word)
+    case GuessWord(word, playerId) => state2(Word(word, word, playerId))
   }
   val webSocketRoute: WebSocketRoute = new WebSocketRoute(gameFlow)
   val wsClient = WSProbe()
@@ -31,8 +31,8 @@ class WebSocketRouteSpec extends Specification with Mockito with Specs2RouteTest
           wsClient.sendMessage("""{"key": "TURN_LETTER"}""")
           wsClient.expectMessage(state1.asJson.toString)
 
-          wsClient.sendMessage("""{"key": "GUESS_WORD", "word": "PIG", "playerId": 123}""")
-          wsClient.expectMessage(state2(Word("PIG", 123)).asJson.toString)
+          wsClient.sendMessage("""{"key": "GUESS_WORD", "word": "pig", "playerId": 123}""")
+          wsClient.expectMessage(state2(Word("pig", "pig", 123)).asJson.toString)
 
           wsClient.sendCompletion()
           wsClient.expectCompletion()

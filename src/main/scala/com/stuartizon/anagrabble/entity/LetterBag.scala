@@ -4,7 +4,7 @@ import io.circe.{Encoder, Json}
 
 import scala.util.Random
 
-class LetterBag(private val letters: List[Char]) {
+case class LetterBag(letters: List[Char]) {
   def nonEmpty: Boolean = letters.nonEmpty
 
   def takeRandomLetter: (Char, LetterBag) = {
@@ -18,7 +18,7 @@ object LetterBag {
   def apply(chars: Char*): LetterBag = new LetterBag(chars.toList)
 
   def build(letterCounts: Map[Char, Int]): LetterBag = new LetterBag(
-    ('A' to 'Z').toList.flatMap(char => List.fill(letterCounts.getOrElse(char, 0))(char))
+    ('a' to 'z').toList.flatMap(char => List.fill(letterCounts.getOrElse(char, 0))(char))
   )
 
   implicit val encoder: Encoder[LetterBag] =

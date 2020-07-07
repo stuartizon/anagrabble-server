@@ -1,5 +1,7 @@
 name := "anagrabble-server"
 
+scalaVersion := "2.13.3"
+
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.1.12",
   "com.typesafe.akka" %% "akka-stream" % "2.6.5",

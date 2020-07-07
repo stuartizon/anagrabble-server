@@ -8,12 +8,12 @@ import com.stuartizon.anagrabble.entity.{Game, PlayerCommand}
 
 import scala.PartialFunction.empty
 
-class GameFlow(initialGameState: Game)(implicit materializer: Materializer) {
+class GameFlow(initialGameState: Game, dictionary: Dictionary)(implicit materializer: Materializer) {
   private val (gameStateListener, gameStateSource) = Source.actorRef[Game](empty, empty, 100, OverflowStrategy.fail)
     .toMat(BroadcastHub.sink)(Keep.both)
     .run()
 
-  private val gameManager = materializer.system.actorOf(Props(classOf[GameManager], initialGameState, gameStateListener))
+  private val gameManager = materializer.system.actorOf(Props(classOf[GameManager], initialGameState, dictionary, gameStateListener))
 
   private val playerCommandSink = MergeHub.source[PlayerCommand]
     .to(Sink.actorRef(gameManager, PoisonPill, _ => PoisonPill))

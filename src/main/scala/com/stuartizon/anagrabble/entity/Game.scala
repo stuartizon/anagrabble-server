@@ -14,4 +14,4 @@ case class Game(players: List[Player], words: List[Word], letters: List[Char], l
 
 case class Player(id: Long, name: String)
 
-case class Word(value: String, playerId: Long)
+case class Word(value: String, root: String, playerId: Long)
