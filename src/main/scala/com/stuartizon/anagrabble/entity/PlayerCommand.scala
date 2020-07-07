@@ -17,7 +17,7 @@ object PlayerCommand {
         for {
           word <- c.downField("word").as[String]
           playerId <- c.downField("playerId").as[Long]
-        } yield GuessWord(Word(word, playerId))
+        } yield GuessWord(Word(word.toUpperCase, playerId))
       case key => Left(DecodingFailure(s"Unknown command $key", Nil))
     }
   }

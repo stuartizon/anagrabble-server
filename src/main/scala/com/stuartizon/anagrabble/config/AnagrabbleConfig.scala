@@ -10,7 +10,7 @@ trait AnagrabbleConfig {
   val port: Int = config.getInt("http.port")
 
   val letterCounts: Map[Char, Int] = {
-    val letters = config.atKey("letters")
-    letters.root().keySet.map(key => key.charAt(0).toUpper -> letters.getInt(key)).toMap
+    val letters = config.getObject("letters").toConfig
+    letters.root().keySet().map(key => key.charAt(0).toUpper -> letters.getInt(key)).toMap
   }
 }

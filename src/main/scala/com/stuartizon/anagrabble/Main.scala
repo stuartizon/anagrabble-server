@@ -3,21 +3,21 @@ package com.stuartizon.anagrabble
 import akka.actor.ActorSystem
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Directives._
 import com.stuartizon.anagrabble.config.AnagrabbleConfig
-
+import com.stuartizon.anagrabble.entity.{Game, LetterBag}
+import com.stuartizon.anagrabble.route.WebSocketRoute
+import com.stuartizon.anagrabble.service.GameFlow
 
 object Main extends AnagrabbleConfig {
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem()
     implicit val log: LoggingAdapter = system.log
 
-    val route =
-      get {
-        complete("Hello")
-      }
+    val initialGameState = Game(Nil, Nil, Nil, LetterBag.build(letterCounts))
 
-    Http().bindAndHandle(route, host, port)
+    val gameFlow = new GameFlow(initialGameState)
+    val webSocketRoute = new WebSocketRoute(gameFlow.gameFlow)
+
+    Http().bindAndHandle(webSocketRoute.connect, host, port)
   }
-
 }

@@ -8,7 +8,7 @@ trait LetterTurner {
     * Returns a [[scala.Some]] containing the new game state if a letter can be turned, or a [[scala.None]] if there
     * are no more tiles to turn. */
   def turnLetter(game: Game): Option[Game] = {
-    if (game.letterBag.letters.nonEmpty) {
+    if (game.letterBag.nonEmpty) {
       val (newLetter, newLetterBag) = game.letterBag.takeRandomLetter
       Some(game.addLetter(newLetter).withLetterBag(newLetterBag))
     }
