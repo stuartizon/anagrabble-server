@@ -26,6 +26,12 @@ class WordBuilderSpec extends Specification with WordBuilder {
       }
     }
 
+    "return none if root of the word has not changed" in {
+      val cats = Word("cats", "cat", 55)
+      val result = buildWord(initialGameState, cats)
+      result must beNone
+    }
+
     "return none if word can't be built" in {
       val coat = Word("coat", "coat", 987)
       val result = buildWord(initialGameState, coat)

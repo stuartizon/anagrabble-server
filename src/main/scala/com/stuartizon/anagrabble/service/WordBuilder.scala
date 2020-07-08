@@ -14,8 +14,10 @@ trait WordBuilder {
 
     def letterPileContains(letters: List[Char]): Boolean = letters.diff(game.letters).isEmpty
 
+    def rootHasBeenChanged(from: Word) = !newWord.root.equals(from.root)
 
-    game.words.filter(allLettersUsedInNewWord)
+
+    game.words.filter(word => allLettersUsedInNewWord(word) && rootHasBeenChanged(word))
       .map(word => word -> lettersRequiredToBuildNewWord(word))
       .find {
         case (_, lettersRequired) => lettersRequired.nonEmpty && letterPileContains(lettersRequired)
