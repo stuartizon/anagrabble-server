@@ -15,3 +15,8 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-mock" % "4.10.0" % Test,
   "ch.qos.logback" % "logback-classic" % "1.1.3" % Runtime
 )
+
+dockerUsername := Some("stuartizon")
+dockerExposedPorts := List(8080)
+
+enablePlugins(DockerPlugin, JavaServerAppPackaging)

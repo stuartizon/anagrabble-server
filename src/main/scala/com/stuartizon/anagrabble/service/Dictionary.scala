@@ -7,7 +7,7 @@ class Dictionary {
   private val entries = {
     val wordWithRoot = "(\\w+)\\s(\\w+)".r
 
-    Using.resource(Source.fromFile("src/main/resources/dictionary.txt")) {
+    Using.resource(Source.fromResource("dictionary.txt")) {
       _.getLines().toList.map {
         case wordWithRoot(word, root) => word -> root
         case word => word.trim -> word.trim
