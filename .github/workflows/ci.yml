@@ -19,13 +19,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-#    - name: Login to DockerHub
-#      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-#      env:
-#        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-#        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#    - name: Release
-#      run: sbt "release with-defaults"
+    - name: Login to DockerHub
+      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Release
+      run: sbt "release with-defaults"
     - name: Deploy
       run: |
         terraform init -backend-config="token=$TF_TOKEN" infra
