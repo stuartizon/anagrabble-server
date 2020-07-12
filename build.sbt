@@ -1,3 +1,5 @@
+import ReleaseTransformations._
+
 name := "anagrabble-server"
 
 scalaVersion := "2.13.3"
@@ -20,3 +22,16 @@ dockerUsername := Some("stuartizon")
 dockerExposedPorts := List(8080)
 
 enablePlugins(DockerPlugin, JavaServerAppPackaging)
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  releaseStepTask(publish in Docker),
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
+)
