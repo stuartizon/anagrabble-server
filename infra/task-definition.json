@@ -1,0 +1,13 @@
+[
+  {
+    "name": "anagrabble-server",
+    "image": "stuartizon/anagrabble-server:${version}",
+    "cpu": 10,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8080
+      }
+    ]
+  }
+]
