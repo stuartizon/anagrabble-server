@@ -1,7 +1,7 @@
 [
   {
     "name": "anagrabble-server",
-    "image": "stuartizon/anagrabble-server:${version}",
+    "image": "stuartizon/anagrabble-server:${application_version}",
     "cpu": 10,
     "essential": true,
     "portMappings": [

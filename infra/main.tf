@@ -16,6 +16,6 @@ provider "aws" {
 resource "aws_ecs_task_definition" "anagrabble-server" {
   family = "anagrabble-server"
   container_definitions = templatefile("${path.module}/task-definition.json", {
-    version = var.version
+    application_version = var.application_version
   })
 }
