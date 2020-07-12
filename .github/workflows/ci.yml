@@ -28,7 +28,7 @@ jobs:
       run: sbt "release with-defaults"
     - name: Deploy
       run: |
-        export TF_VAR_application_version=$(grep -oE '[0-9.]+' version.sbt)
+        echo "::set-env name=TF_VAR_application_version::$(grep -oE '[0-9.]+' version.sbt)"
         terraform init -backend-config="token=$TF_TOKEN" infra
         terraform apply -auto-approve infra
       env:
