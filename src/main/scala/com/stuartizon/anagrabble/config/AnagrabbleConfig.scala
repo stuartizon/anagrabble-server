@@ -1,7 +1,8 @@
 package com.stuartizon.anagrabble.config
 
 import com.typesafe.config.ConfigFactory
-import scala.collection.convert.ImplicitConversionsToScala._
+
+import scala.jdk.CollectionConverters._
 
 trait AnagrabbleConfig {
   private val config = ConfigFactory.load()
@@ -11,6 +12,6 @@ trait AnagrabbleConfig {
 
   val letterCounts: Map[Char, Int] = {
     val letters = config.getObject("letters").toConfig
-    letters.root().keySet().map(key => key.charAt(0).toLower -> letters.getInt(key)).toMap
+    letters.root().keySet().asScala.map(key => key.charAt(0).toLower -> letters.getInt(key)).toMap
   }
 }

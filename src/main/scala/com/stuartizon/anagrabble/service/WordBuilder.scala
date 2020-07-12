@@ -8,9 +8,9 @@ trait WordBuilder {
     * Returns a [[scala.Some]] containing the new game state if the word can be built, or a [[scala.None]] if it is not
     * possible to build this word from the current game state. */
   def buildWord(game: Game, newWord: Word): Option[Game] = {
-    def lettersRequiredToBuildNewWord(from: Word) = newWord.value.diff(from.value).toList
+    def lettersRequiredToBuildNewWord(from: Word) = newWord.value.toSeq.diff(from.value).toList
 
-    def allLettersUsedInNewWord(from: Word) = from.value.diff(newWord.value).isEmpty
+    def allLettersUsedInNewWord(from: Word) = from.value.toSeq.diff(newWord.value).isEmpty
 
     def letterPileContains(letters: List[Char]): Boolean = letters.diff(game.letters).isEmpty
 
