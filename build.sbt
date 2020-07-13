@@ -1,4 +1,5 @@
-import ReleaseTransformations._
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
+import sbtrelease.{Version, versionFormatError}
 
 name := "anagrabble-server"
 
@@ -28,10 +29,12 @@ releaseProcess := Seq[ReleaseStep](
   inquireVersions,
   runClean,
   runTest,
-  setReleaseVersion,
-  commitReleaseVersion,
   releaseStepTask(publish in Docker),
   setNextVersion,
   commitNextVersion,
   pushChanges
 )
+
+releaseNextVersion := {
+  ver => Version(ver).map(_.bump.string).getOrElse(versionFormatError(ver))
+}
