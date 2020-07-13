@@ -48,6 +48,7 @@ resource "aws_lb_target_group" "anagrabble-server" {
   name = "anagrabble-server"
   port = 8080
   protocol = "HTTP"
+  target_type = "ip"
   vpc_id = data.aws_vpc.default.id
 }
 
