@@ -17,6 +17,7 @@ resource "aws_ecs_task_definition" "anagrabble-server" {
   family = "anagrabble-server"
   cpu = 512
   memory = 1024
+  network_mode = "awsvpc"
   requires_compatibilities = [
     "FARGATE"
   ]
