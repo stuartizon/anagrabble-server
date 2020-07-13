@@ -15,6 +15,11 @@ provider "aws" {
 
 resource "aws_ecs_task_definition" "anagrabble-server" {
   family = "anagrabble-server"
+  cpu = 512
+  memory = 1024
+  requires_compatibilities = [
+    "FARGATE"
+  ]
   container_definitions = templatefile("${path.module}/task-definition.json", {
     application_version = var.application_version
   })
