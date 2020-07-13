@@ -74,4 +74,8 @@ resource "aws_ecs_service" "anagrabble-server" {
     container_name = "anagrabble-server"
     container_port = 8080
   }
+
+  network_configuration {
+    subnets = data.aws_subnet_ids.default.ids
+  }
 }
