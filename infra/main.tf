@@ -34,6 +34,15 @@ data "aws_subnet_ids" "default" {
   vpc_id = data.aws_vpc.default.id
 }
 
+data "aws_security_groups" "default" {
+  filter {
+    name = "vpc-id"
+    values = [
+      data.aws_vpc.default.id
+    ]
+  }
+}
+
 data "aws_ecs_cluster" "default" {
   cluster_name = "default"
 }
@@ -77,5 +86,6 @@ resource "aws_ecs_service" "anagrabble-server" {
 
   network_configuration {
     subnets = data.aws_subnet_ids.default.ids
+    security_groups = data.aws_security_groups.default.ids
   }
 }
