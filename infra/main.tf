@@ -87,5 +87,6 @@ resource "aws_ecs_service" "anagrabble-server" {
   network_configuration {
     subnets = data.aws_subnet_ids.default.ids
     security_groups = data.aws_security_groups.default.ids
+    assign_public_ip = true
   }
 }
