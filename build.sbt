@@ -16,6 +16,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-testkit" % "2.6.5" % Test,
   "org.specs2" %% "specs2-core" % "4.10.0" % Test,
   "org.specs2" %% "specs2-mock" % "4.10.0" % Test,
+  "com.typesafe.akka" %% "akka-slf4j" % "2.6.5" % Runtime,
   "ch.qos.logback" % "logback-classic" % "1.1.3" % Runtime
 )
 
