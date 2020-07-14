@@ -59,6 +59,11 @@ resource "aws_lb_target_group" "anagrabble-server" {
   protocol = "HTTP"
   target_type = "ip"
   vpc_id = data.aws_vpc.default.id
+
+  health_check {
+    path = "/ping"
+    matcher = "200"
+  }
 }
 
 resource "aws_lb_listener" "anagrabble-server" {
