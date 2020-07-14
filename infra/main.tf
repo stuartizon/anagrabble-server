@@ -13,11 +13,37 @@ provider "aws" {
   region = "ap-southeast-2"
 }
 
+data "aws_iam_policy_document" "ecs_execution_assume_role_policy" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "ecs-tasks.amazonaws.com"
+      ]
+    }
+  }
+}
+
+resource "aws_iam_role" "ecs_execution_role" {
+  name = "ecsTaskExecutionRole"
+  assume_role_policy = data.aws_iam_policy_document.ecs_execution_assume_role_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_execution_role" {
+  role = aws_iam_role.ecs_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
 resource "aws_ecs_task_definition" "anagrabble-server" {
   family = "anagrabble-server"
   cpu = 512
   memory = 1024
   network_mode = "awsvpc"
+  execution_role_arn = aws_iam_role.ecs_execution_role.arn
   requires_compatibilities = [
     "FARGATE"
   ]
