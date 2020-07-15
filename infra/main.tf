@@ -38,6 +38,10 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_cloudwatch_log_group" "anagrabble-server" {
+  name = "anagrabble-server"
+}
+
 resource "aws_ecs_task_definition" "anagrabble-server" {
   family = "anagrabble-server"
   cpu = 512
