@@ -19,10 +19,9 @@ object Main extends AnagrabbleConfig with PingRoute with RouteLogging {
     val gameFlow = new GameFlow(initialGameState, dictionary)
     val webSocketRoute = new WebSocketRoute(gameFlow.gameFlow)
 
-    val route = logRequestResponse {
+    val route = ping ~ logRequestResponse {
       handleRejections(RejectionHandler.default) {
-        webSocketRoute.connect ~
-          ping
+        webSocketRoute.connect
       }
     }
 
