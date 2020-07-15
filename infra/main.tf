@@ -139,3 +139,15 @@ resource "aws_ecs_service" "anagrabble-server" {
     assign_public_ip = true
   }
 }
+
+resource "aws_route53_record" "api" {
+  name = "api.anagrabble.com"
+  type = "A"
+  zone_id = data.aws_route53_zone.anagrabble.zone_id
+
+  alias {
+    evaluate_target_health = true
+    name = aws_lb.anagrabble-server.dns_name
+    zone_id = aws_lb.anagrabble-server.zone_id
+  }
+}
