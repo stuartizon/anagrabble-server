@@ -2,6 +2,8 @@
   {
     "name": "anagrabble-server",
     "image": "stuartizon/anagrabble-server:${application_version}",
+    "cpu": 512,
+    "memory":1024,
     "essential": true,
     "portMappings": [
       {
