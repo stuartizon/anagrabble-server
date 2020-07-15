@@ -77,6 +77,17 @@ data "aws_ecs_cluster" "default" {
   cluster_name = "default"
 }
 
+data "aws_route53_zone" "anagrabble" {
+  name = "anagrabble.com"
+}
+
+module "certificate" {
+  source = "stuartizon/certificate/aws"
+  version = "0.1.2"
+  domain_name = "api.anagrabble.com"
+  zone_id = data.aws_route53_zone.anagrabble.zone_id
+}
+
 resource "aws_lb" "anagrabble-server" {
   name = "anagrabble-server"
   load_balancer_type = "application"
@@ -98,8 +109,11 @@ resource "aws_lb_target_group" "anagrabble-server" {
 
 resource "aws_lb_listener" "anagrabble-server" {
   load_balancer_arn = aws_lb.anagrabble-server.arn
-  port = 80
-  protocol = "HTTP"
+  certificate_arn = module.certificate.arn
+  port = 443
+  protocol = "HTTPS"
+  ssl_policy = "ELBSecurityPolicy-2016-08"
+
   default_action {
     type = "forward"
     target_group_arn = aws_lb_target_group.anagrabble-server.arn
