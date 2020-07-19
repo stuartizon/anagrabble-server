@@ -5,6 +5,7 @@ import io.circe.{Decoder, DecodingFailure, HCursor}
 trait PlayerCommand
 
 object PlayerCommand {
+  case class Join(playerId: String) extends PlayerCommand
 
   case object TurnLetter extends PlayerCommand
 

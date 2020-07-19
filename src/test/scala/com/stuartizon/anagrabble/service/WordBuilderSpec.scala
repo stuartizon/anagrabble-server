@@ -4,8 +4,8 @@ import com.stuartizon.anagrabble.entity.{Game, LetterBag, Word}
 import org.specs2.mutable.Specification
 
 class WordBuilderSpec extends Specification with WordBuilder {
-  val cat = Word("cat", "cat", 1)
-  val initialGameState = Game(Nil, List(cat), List('s', 'k', 'y', 'p'), LetterBag())
+  private val cat = Word("cat", "cat", 1)
+  private val initialGameState = Game(Set.empty, List(cat), List('s', 'k', 'y', 'p'), LetterBag())
 
   "Word builder" should {
     "build a word by stealing an existing word" in {

@@ -10,8 +10,8 @@ import org.specs2.mutable.Specification
 class GameFlowSpec(implicit env: ExecutionEnv) extends Specification {
   implicit val system: ActorSystem = ActorSystem()
   val dictionary = new Dictionary
-  val initialGameState = Game(Nil, Nil, Nil, LetterBag('b'))
-  val expectedGameState = Game(Nil, Nil, List('b'), LetterBag())
+  val initialGameState = Game(Set.empty, Nil, Nil, LetterBag('b'))
+  val expectedGameState = Game(Set.empty, Nil, List('b'), LetterBag())
 
   "Game flow" should {
     "handle commands and return game state updates" in {
