@@ -1,29 +1,33 @@
 package com.stuartizon.anagrabble.service
 
 import akka.actor.{Actor, ActorRef}
-import com.stuartizon.anagrabble.entity.{Game, Player, Word}
-import com.stuartizon.anagrabble.entity.PlayerCommand.{GuessWord, Join, TurnLetter}
+import com.stuartizon.anagrabble.entity.{Game, GuessWord, Join, PlayerCommandWithName, TurnLetter, Word}
 
 class GameManager(initialGameState: Game, dictionary: Dictionary, gameStateListener: ActorRef) extends Actor with WordBuilder with LetterTurner {
   override def receive: Receive = behaviour(initialGameState)
 
   def behaviour(gameState: Game): Receive = {
-    case Join(playerId) =>
-      val newGameState = gameState.addPlayer(Player(playerId))
+    case PlayerCommandWithName(Join, player) =>
+      val newGameState =
+        if (gameState.players.contains(player)) gameState
+        else gameState.addPlayer(player)
       gameStateListener ! newGameState
       context.become(behaviour(newGameState))
 
-    case TurnLetter =>
+    case PlayerCommandWithName(TurnLetter, _) =>
       turnLetter(gameState).foreach { newGameState =>
         gameStateListener ! newGameState
         context.become(behaviour(newGameState))
       }
 
-    case GuessWord(word, playerId) =>
+    case PlayerCommandWithName(GuessWord(word), player) =>
       dictionary.findRoot(word).foreach { root =>
-        buildWord(gameState, Word(word, root, playerId)).foreach { newGameState =>
-          gameStateListener ! newGameState
-          context.become(behaviour(newGameState))
+        val playerId = gameState.players.indexOf(player)
+        if (playerId >= 0) {
+          buildWord(gameState, Word(word, root, playerId)).foreach { newGameState =>
+            gameStateListener ! newGameState
+            context.become(behaviour(newGameState))
+          }
         }
       }
   }

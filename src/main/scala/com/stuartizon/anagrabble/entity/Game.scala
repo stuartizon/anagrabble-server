@@ -1,7 +1,7 @@
 package com.stuartizon.anagrabble.entity
 
-case class Game(players: Set[Player], words: List[Word], letters: List[Char], letterBag: LetterBag) {
-  def addPlayer(player: Player): Game = copy(players = players + player)
+case class Game(players: List[String], words: List[Word], letters: List[Char], letterBag: LetterBag) {
+  def addPlayer(player: String): Game = copy(players = players :+ player)
 
   def addWord(word: Word): Game = copy(words = word :: words)
 
@@ -13,7 +13,5 @@ case class Game(players: Set[Player], words: List[Word], letters: List[Char], le
 
   def withLetterBag(letterBag: LetterBag): Game = copy(letterBag = letterBag)
 }
-
-case class Player(id: String)
 
 case class Word(value: String, root: String, playerId: Long)
