@@ -14,7 +14,7 @@ object PlayerCommand {
   implicit val decoder: Decoder[PlayerCommand] = (c: HCursor) => {
     c.downField("key").as[String] match {
       case Right("TURN_LETTER") => Right(TurnLetter)
-      case Right("GUESS_WORD") => c.downField("word").as[String].map(GuessWord)
+      case Right("GUESS_WORD") => c.downField("word").as[String].map(word => GuessWord(word.toLowerCase))
       case key => Left(DecodingFailure(s"Unknown command $key", Nil))
     }
   }
