@@ -1,9 +1,9 @@
 package com.stuartizon.anagrabble.service
 
-import akka.actor.{Actor, ActorRef}
-import com.stuartizon.anagrabble.entity.{Game, GuessWord, Join, PlayerCommandWithName, TurnLetter, Word}
+import akka.actor.Actor
+import com.stuartizon.anagrabble.entity._
 
-class GameManager(initialGameState: Game, dictionary: Dictionary, gameStateListener: ActorRef) extends Actor with WordBuilder with LetterTurner {
+class GameManager(initialGameState: Game, dictionary: Dictionary, eventBus: GameEventBus) extends Actor with WordBuilder with LetterTurner {
   override def receive: Receive = behaviour(initialGameState)
 
   def behaviour(gameState: Game): Receive = {
@@ -11,12 +11,12 @@ class GameManager(initialGameState: Game, dictionary: Dictionary, gameStateListe
       val newGameState =
         if (gameState.players.contains(player)) gameState
         else gameState.addPlayer(player)
-      gameStateListener ! newGameState
+      eventBus.publish(newGameState)
       context.become(behaviour(newGameState))
 
     case PlayerCommandWithName(TurnLetter, _) =>
       turnLetter(gameState).foreach { newGameState =>
-        gameStateListener ! newGameState
+        eventBus.publish(newGameState)
         context.become(behaviour(newGameState))
       }
 
@@ -25,7 +25,7 @@ class GameManager(initialGameState: Game, dictionary: Dictionary, gameStateListe
         val playerId = gameState.players.indexOf(player)
         if (playerId >= 0) {
           buildWord(gameState, Word(word, root, playerId)).foreach { newGameState =>
-            gameStateListener ! newGameState
+            eventBus.publish(newGameState)
             context.become(behaviour(newGameState))
           }
         }

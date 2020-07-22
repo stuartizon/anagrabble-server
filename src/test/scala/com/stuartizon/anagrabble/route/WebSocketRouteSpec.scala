@@ -1,10 +1,10 @@
 package com.stuartizon.anagrabble.route
 
-import akka.NotUsed
 import akka.http.scaladsl.server.MissingQueryParamRejection
 import akka.http.scaladsl.testkit.{Specs2RouteTest, WSProbe}
 import akka.stream.scaladsl.Flow
 import com.stuartizon.anagrabble.entity.{Join, _}
+import com.stuartizon.anagrabble.service.GameFlow
 import io.circe.generic.auto._
 import io.circe.syntax._
 import org.specs2.mock.Mockito
@@ -17,11 +17,13 @@ class WebSocketRouteSpec extends Specification with Mockito with Specs2RouteTest
 
   def state3(word: Word): Game = Game(Nil, List(word), Nil, LetterBag())
 
-  val gameFlow: Flow[PlayerCommandWithName, Game, NotUsed] = Flow.fromFunction {
+  val gameFlow: GameFlow = mock[GameFlow]
+  gameFlow.gameFlow() returns Flow.fromFunction {
     case PlayerCommandWithName(Join, playerId) => state1(playerId)
     case PlayerCommandWithName(TurnLetter, _) => state2
     case PlayerCommandWithName(GuessWord(word), player) => state3(Word(word, word, player.hashCode))
   }
+
   val webSocketRoute: WebSocketRoute = new WebSocketRoute(gameFlow)
   val wsClient: WSProbe = WSProbe()
 

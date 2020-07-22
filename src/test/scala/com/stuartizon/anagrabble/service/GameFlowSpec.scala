@@ -2,6 +2,7 @@ package com.stuartizon.anagrabble.service
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Sink, Source}
+import akka.testkit.TestProbe
 import com.stuartizon.anagrabble.entity.{Game, LetterBag, PlayerCommandWithName, TurnLetter}
 import org.specs2.concurrent.ExecutionEnv
 import org.specs2.mutable.Specification
@@ -9,23 +10,25 @@ import org.specs2.mutable.Specification
 class GameFlowSpec(implicit env: ExecutionEnv) extends Specification {
   implicit val system: ActorSystem = ActorSystem()
   val dictionary = new Dictionary
-  val initialGameState = Game(Nil, Nil, Nil, LetterBag('b'))
-  val expectedGameState = Game(Nil, Nil, List('b'), LetterBag())
+  val gameEventBus = new GameEventBus
+  val gameManager: TestProbe = TestProbe()
 
   "Game flow" should {
-    "handle commands and return game state updates" in {
-      val flow = new GameFlow(initialGameState, dictionary)
-      val gameStateUpdate = Source.single(PlayerCommandWithName(TurnLetter, "Dave")).via(flow.gameFlow).runWith(Sink.head)
-
-      gameStateUpdate must beEqualTo(expectedGameState).await
+    "send commands to the game manager actor" in {
+      val flow = new GameFlow(gameEventBus, gameManager.ref).gameFlow()
+      val command: PlayerCommandWithName = PlayerCommandWithName(TurnLetter, "Dave")
+      Source.single(command).via(flow).runWith(Sink.head)
+      gameManager.expectMsg(command)
+      ok
     }
 
-    "return updates when the game state is changed by another source" in {
-      val flow = new GameFlow(initialGameState, dictionary)
-      val gameStateUpdate = Source.empty.via(flow.gameFlow).runWith(Sink.head)
-      Source.single(PlayerCommandWithName(TurnLetter, "Dave")).via(flow.gameFlow).run
+    "return updates from the event bus" in {
+      val flow = new GameFlow(gameEventBus, gameManager.ref).gameFlow()
+      val gameState = Game(Nil, Nil, List('b'), LetterBag())
+      gameEventBus.publish(gameState)
+      val result = Source.empty.via(flow).runWith(Sink.head)
 
-      gameStateUpdate must beEqualTo(expectedGameState).await
+      result must beEqualTo(gameState).await
     }
   }
 }
