@@ -15,7 +15,7 @@ class GameFlowSpec(implicit env: ExecutionEnv) extends Specification {
 
   "Game flow" should {
     "send commands to the game manager actor" in {
-      val flow = new GameFlow(gameEventBus, gameManager.ref).gameFlow()
+      val flow = new GameFlow(gameEventBus).gameFlow(gameManager.ref)
       val command: PlayerCommandWithName = PlayerCommandWithName(TurnLetter, "Dave")
       Source.single(command).via(flow).runWith(Sink.head)
       gameManager.expectMsg(command)
@@ -23,7 +23,7 @@ class GameFlowSpec(implicit env: ExecutionEnv) extends Specification {
     }
 
     "return updates from the event bus" in {
-      val flow = new GameFlow(gameEventBus, gameManager.ref).gameFlow()
+      val flow = new GameFlow(gameEventBus).gameFlow(gameManager.ref)
       val gameState = Game(Nil, Nil, List('b'), LetterBag())
       gameEventBus.publish(gameState)
       val result = Source.empty.via(flow).runWith(Sink.head)

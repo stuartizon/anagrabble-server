@@ -8,8 +8,8 @@ import com.stuartizon.anagrabble.entity.{Game, PlayerCommandWithName}
 
 import scala.PartialFunction.empty
 
-class GameFlow(eventBus: GameEventBus, gameManager: ActorRef)(implicit materializer: Materializer) {
-  def gameFlow(): Flow[PlayerCommandWithName, Game, NotUsed] = {
+class GameFlow(eventBus: GameEventBus)(implicit materializer: Materializer) {
+  def gameFlow(gameManager: ActorRef): Flow[PlayerCommandWithName, Game, NotUsed] = {
     val (gameStateListener, gameStateSource) = Source.actorRef[Game](empty, empty, 100, OverflowStrategy.fail)
       .preMaterialize()
 
